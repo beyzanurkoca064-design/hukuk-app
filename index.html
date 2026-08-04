@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1724">
+<title>Hukuk Çalışma</title>
+<style>
+:root{--bg:#07111c;--card:#102131;--card2:#152b3d;--text:#f5f1e8;--muted:#9ba9b5;--accent:#d6ae58;--green:#69b6a7;--red:#d56f62;--line:#263a4a}
+*{box-sizing:border-box}body{margin:0;background:#050d15;color:var(--text);font-family:Arial,sans-serif}button{font:inherit}
+.app{max-width:430px;min-height:100vh;margin:auto;background:var(--bg);padding:18px 16px 82px}
+h1,h2,h3{margin:0 0 8px;font-family:Georgia,serif}h1{font-size:27px}.muted{color:var(--muted);font-size:13px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.hero{border-radius:20px;background:linear-gradient(145deg,#132c3e,#0d1d2b);padding:18px}.progress{height:8px;background:#243849;border-radius:10px;overflow:hidden}.progress span{display:block;height:100%;background:var(--accent);border-radius:10px}.row{display:flex;gap:10px}.row>*{flex:1}.btn{border:0;border-radius:12px;padding:12px 14px;background:var(--accent);color:#101820;font-weight:700;cursor:pointer}.btn.secondary{background:#20384a;color:var(--text)}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.subject{display:flex;justify-content:space-between;align-items:center}.badge{font-size:11px;color:var(--accent);background:#2b3440;padding:5px 8px;border-radius:8px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:67px;background:#0a1723;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding-top:8px}.nav button{background:none;border:0;color:var(--muted);font-size:11px}.nav button.active{color:var(--accent)}
+.screen{display:none}.screen.active{display:block}.q{font-size:17px;line-height:1.45}.option{width:100%;text-align:left;background:#102131;color:var(--text);border:1px solid var(--line);border-radius:13px;padding:13px;margin:7px 0;cursor:pointer}.option.correct{border-color:var(--green);background:#16382f}.option.wrong{border-color:var(--red);background:#3a211f}.stat{font-size:26px;font-weight:700}.small{font-size:12px}.center{text-align:center}.back{background:none;border:0;color:var(--accent);padding:0 0 14px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+<section id="home" class="screen active">
+<div class="top"><div><div class="muted">HUKUK ÇALIŞMA</div><h1>Merhaba, Ece</h1></div><div class="badge">7 gün 🔥</div></div>
+<div class="hero"><div class="muted">BUGÜNKÜ HEDEF</div><h2>20 soru çöz</h2><div class="progress"><span id="dailyBar" style="width:35%"></span></div><p class="muted"><span id="dailyCount">7</span>/20 soru tamamlandı</p></div>
+<div class="card"><div class="subject"><div><h3>Devam Et</h3><div class="muted">Anayasa Hukuku</div></div><span class="badge">%62</span></div><br><button class="btn" onclick="openTest()">Teste devam et →</button></div>
+<div class="card"><h3>Öncelikli Test</h3><p class="muted">Ceza hukuku • 10 soru • 8 dk</p><button class="btn secondary" onclick="openTest()">Teste Başla</button></div>
+</section>
+
+<section id="lessons" class="screen">
+<div class="top"><div><div class="muted">KÜTÜPHANE</div><h1>Derslerin</h1></div></div>
+<div class="card"><div class="subject"><div><h3>Anayasa Hukuku</h3><div class="muted">12 konu • %62 tamamlandı</div></div><span class="badge">%62</span></div><br><button class="btn" onclick="openLesson('Anayasa Hukuku')">Derse git</button></div>
+<div class="card"><div class="subject"><div><h3>Medeni Hukuk</h3><div class="muted">18 konu • %35 tamamlandı</div></div><span class="badge">%35</span></div><br><button class="btn" onclick="openLesson('Medeni Hukuk')">Derse git</button></div>
+<div class="card"><div class="subject"><div><h3>Ceza Hukuku</h3><div class="muted">15 konu • Yeni</div></div><span class="badge">Yeni</span></div><br><button class="btn" onclick="openLesson('Ceza Hukuku')">Derse git</button></div>
+</section>
+
+<section id="lesson" class="screen">
+<button class="back" onclick="show('lessons')">← Derslere dön</button><div class="muted">DERS DETAYI</div><h1 id="lessonTitle">Ceza Hukuku</h1>
+<div class="card"><h3>Zilyetlik</h3><p class="muted">Temel kavramlar, şartlar ve örnek olaylar.</p><button class="btn" onclick="openTest()">Konu testi →</button></div>
+<div class="card"><h3>Çalışma planı</h3><p class="muted">10 soru • yaklaşık 8 dakika</p><button class="btn secondary" onclick="openTest()">Testi çöz</button></div>
+</section>
+
+<section id="test" class="screen">
+<div class="top"><div><div class="muted">TEST • <span id="qnum">1</span>/5</div><h2>Ceza Hukuku</h2></div><div class="badge"><span id="score">0</span> puan</div></div>
+<div class="card"><div class="q" id="question"></div><div id="options"></div><p class="muted" id="feedback"></p><button class="btn" id="nextBtn" style="display:none" onclick="nextQuestion()">Sonraki soru →</button></div>
+</section>
+
+<section id="progress" class="screen">
+<div class="muted">PERFORMANS</div><h1>İlerlemen</h1>
+<div class="row"><div class="card center"><div class="stat" id="solved">7</div><div class="muted">Çözülen</div></div><div class="card center"><div class="stat" id="accuracy">0%</div><div class="muted">Doğruluk</div></div></div>
+<div class="card"><h3>Haftalık hedef</h3><p class="muted">Bu hafta 50 soru</p><div class="progress"><span id="weekBar" style="width:14%"></span></div><p class="muted"><span id="weekCount">7</span>/50</p></div>
+<div class="card"><h3>Çalışma serisi 🔥</h3><p class="muted">7 gündür düzenli çalışıyorsun. Böyle devam!</p></div>
+</section>
+
+<div class="nav">
+<button id="n-home" class="active" onclick="show('home')">⌂<br>Ana Sayfa</button>
+<button id="n-lessons" onclick="show('lessons')">▤<br>Dersler</button>
+<button id="n-progress" onclick="show('progress')">◔<br>İlerleme</button>
+</div>
+</div>
+<script>
+const qs=[
+["Ceza hukukunda kanunilik ilkesi hangi ifadeyle en iyi açıklanır?","Kanunsuz suç ve ceza olmaz","Her fiil cezalandırılır","Hakim yeni suç yaratabilir","Ceza her zaman artırılır"],
+["Türk Ceza Kanunu'nun amacı aşağıdakilerden hangisidir?","Kişi hak ve özgürlüklerini, kamu düzenini ve hukuk devletini korumak","Sadece malvarlığını korumak","Sadece kamu görevlilerini korumak","Her uyuşmazlığı cezalandırmak"],
+["Suçun maddi unsurlarından biri aşağıdakilerden hangisidir?","Fiil","Pişmanlık","Öğrenim durumu","Meslek"],
+["Kast kavramı en genel anlamıyla nedir?","Suçun kanuni tanımındaki unsurların bilerek ve istenerek gerçekleştirilmesi","Sonucun tesadüfen ortaya çıkması","Cezanın tamamen kaldırılması","Yalnızca zarar verme isteği"],
+["Hukuk devletinin temel gereklerinden biri hangisidir?","Devlet organlarının hukukla bağlı olması","Kanunların kişiye göre değişmesi","Yargının yürütmeye bağlı olması","Kuralların gizli tutulması"]
+];
+let qi=0,correct=0,answered=false,totalSolved=Number(localStorage.getItem('solved')||7),totalCorrect=Number(localStorage.getItem('correct')||0);
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));let n=document.getElementById('n-'+id);if(n)n.classList.add('active');updateStats()}
+function openLesson(t){document.getElementById('lessonTitle').textContent=t;show('lesson')}
+function openTest(){qi=0;correct=0;renderQ();show('test')}
+function renderQ(){answered=false;document.getElementById('qnum').textContent=qi+1;document.getElementById('score').textContent=correct;document.getElementById('question').textContent=qs[qi][0];let box=document.getElementById('options');box.innerHTML='';qs[qi].slice(1).forEach((o,i)=>{let b=document.createElement('button');b.className='option';b.textContent=String.fromCharCode(65+i)+') '+o;b.onclick=()=>answer(b,i);box.appendChild(b)});document.getElementById('feedback').textContent='';document.getElementById('nextBtn').style.display='none'}
+function answer(btn,i){if(answered)return;answered=true;let ok=i===0;document.querySelectorAll('.option').forEach((b,j)=>{if(j===0)b.classList.add('correct');});if(ok){btn.classList.add('correct');correct++;totalCorrect++;document.getElementById('feedback').textContent='Doğru! +20 puan';}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='Yanlış. Doğru cevap: '+qs[qi][1]}totalSolved++;localStorage.setItem('solved',totalSolved);localStorage.setItem('correct',totalCorrect);document.getElementById('nextBtn').style.display='block'}
+function nextQuestion(){if(qi<qs.length-1){qi++;renderQ()}else{alert('Test tamamlandı! Puanın: '+(correct*20));show('progress')}}
+function updateStats(){document.getElementById('solved').textContent=totalSolved;document.getElementById('weekCount').textContent=Math.min(totalSolved,50);document.getElementById('weekBar').style.width=Math.min(totalSolved/50*100,100)+'%';document.getElementById('dailyCount').textContent=Math.min(totalSolved,20);document.getElementById('dailyBar').style.width=Math.min(totalSolved/20*100,100)+'%';document.getElementById('accuracy').textContent=totalSolved?Math.round(totalCorrect/totalSolved*100)+'%':'0%'}
+updateStats();
+</script>
+</body></html>
